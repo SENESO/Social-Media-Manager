@@ -1,28 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const { TwitterApi } = require('twitter-api-v2');
-const { FacebookApi } = require('facebook-nodejs-business-sdk');
-const User = require('../models/User');
 const auth = require('../middleware/auth');
-
-// Middleware to verify JWT token
-const auth = async (req, res, next) => {
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-        const user = await User.findOne({ _id: decoded.userId });
-        
-        if (!user) {
-            throw new Error();
-        }
-        
-        req.user = user;
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'Please authenticate' });
-    }
-};
 
 // Connect Twitter account
 router.post('/connect/twitter', auth, async (req, res) => {

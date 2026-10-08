@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { TwitterApi } = require('twitter-api-v2');
 const { FacebookApi } = require('facebook-nodejs-business-sdk');
-const User = require('../models/User');
 const Post = require('../models/Post');
 const auth = require('../middleware/auth');
 
@@ -25,12 +23,15 @@ router.get('/', auth, async (req, res) => {
 // @access  Private
 router.post('/', auth, async (req, res) => {
   try {
-    const { content, platforms } = req.body;
+    const { content, platforms, scheduledTime } = req.body;
 
     const newPost = new Post({
       content,
       platforms,
-      user: req.user.id
+      user: req.user.id,
+      // The client sends `scheduledTime` from the schedule picker; the
+      // schema field is `scheduledFor`.
+      scheduledFor: scheduledTime ? new Date(scheduledTime) : undefined
     });
 
     const post = await newPost.save();
@@ -57,9 +58,16 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(401).json({ msg: 'Not authorized' });
     }
 
+    // Map the client's `scheduledTime` to the schema's `scheduledFor`
+    const { scheduledTime, ...rest } = req.body;
+    const update = { ...rest };
+    if (scheduledTime) {
+      update.scheduledFor = new Date(scheduledTime);
+    }
+
     post = await Post.findByIdAndUpdate(
       req.params.id,
-      { $set: req.body },
+      { $set: update },
       { new: true }
     );
 
@@ -86,7 +94,7 @@ router.delete('/:id', auth, async (req, res) => {
       return res.status(401).json({ msg: 'Not authorized' });
     }
 
-    await post.remove();
+    await post.deleteOne();
     res.json({ msg: 'Post removed' });
   } catch (err) {
     console.error(err.message);

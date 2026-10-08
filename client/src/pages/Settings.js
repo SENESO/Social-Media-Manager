@@ -13,10 +13,6 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
 } from '@mui/material';
 import {
@@ -25,13 +21,12 @@ import {
   Instagram as InstagramIcon,
   LinkedIn as LinkedInIcon,
   Delete as DeleteIcon,
-  Edit as EditIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 
 function Settings() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
@@ -42,16 +37,14 @@ function Settings() {
   const [socialAccounts, setSocialAccounts] = useState({});
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState(null);
 
   useEffect(() => {
     if (user) {
-      setProfileData({
-        ...profileData,
+      setProfileData((p) => ({
+        ...p,
         name: user.name,
         email: user.email,
-      });
+      }));
       fetchSocialAccounts();
     }
   }, [user]);
@@ -109,7 +102,7 @@ function Settings() {
   const handleSocialConnect = async (platform) => {
     // In a real application, this would redirect to the platform's OAuth flow
     try {
-      const response = await axios.post(`/api/social/connect/${platform}`, {
+      await axios.post(`/api/social/connect/${platform}`, {
         // Add necessary OAuth tokens and data
       });
       fetchSocialAccounts();

@@ -61,7 +61,7 @@ function Posts() {
       setFormData({
         content: post.content,
         platforms: post.platforms,
-        scheduledTime: new Date(post.scheduledTime),
+        scheduledTime: post.scheduledFor ? new Date(post.scheduledFor) : new Date(),
         mediaUrls: post.mediaUrls,
       });
     } else {
@@ -164,7 +164,10 @@ function Posts() {
                   ))}
                 </Box>
                 <Typography color="textSecondary">
-                  Scheduled for: {new Date(post.scheduledTime).toLocaleString()}
+                  Scheduled for:{' '}
+                  {post.scheduledFor
+                    ? new Date(post.scheduledFor).toLocaleString()
+                    : 'Not scheduled'}
                 </Typography>
                 <Typography color="textSecondary">
                   Status: {post.status}
@@ -241,7 +244,7 @@ function Posts() {
               onChange={(newValue) =>
                 setFormData({ ...formData, scheduledTime: newValue })
               }
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              slotProps={{ textField: { fullWidth: true } }}
             />
           </Box>
         </DialogContent>

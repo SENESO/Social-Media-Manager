@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -54,11 +54,7 @@ function Analytics() {
     },
   });
 
-  useEffect(() => {
-    fetchAnalyticsData();
-  }, [timeRange, platform]);
-
-  const fetchAnalyticsData = async () => {
+  const fetchAnalyticsData = useCallback(async () => {
     try {
       const response = await axios.get(`/api/analytics/data?timeRange=${timeRange}&platform=${platform}`);
       const data = response.data;
@@ -120,7 +116,11 @@ function Analytics() {
     } catch (error) {
       console.error('Error fetching analytics data:', error);
     }
-  };
+  }, [timeRange, platform]);
+
+  useEffect(() => {
+    fetchAnalyticsData();
+  }, [fetchAnalyticsData]);
 
   return (
     <Box>

@@ -18,9 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "twitter-api-v2": "^1.15.1",
-    "facebook-nodejs-business-sdk": "^18.0.4",
-    "instagram-web-api": "^2.2.2",
-    "node-cron": "^3.0.2"
+    "facebook-nodejs-business-sdk": "^18.0.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",

@@ -34,15 +34,14 @@ A comprehensive social media management platform that allows users to create, sc
    cd ..
    ```
 
-2. Create a `.env` file in the root directory with the following variables:
+2. Create a `.env` file in the root directory. You can copy the provided
+   template and fill in your values:
    ```
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   TWITTER_API_KEY=your_twitter_api_key
-   TWITTER_API_SECRET=your_twitter_api_secret
-   FACEBOOK_APP_ID=your_facebook_app_id
-   FACEBOOK_APP_SECRET=your_facebook_app_secret
+   cp .env.example .env
    ```
+   The required variables are `MONGODB_URI` and `JWT_SECRET` (use a long
+   random string). See `.env.example` for the full list, including the
+   optional social platform API keys.
 
 ## Running the Application
 
